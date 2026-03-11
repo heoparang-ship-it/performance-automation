@@ -28,10 +28,10 @@ export default function AdCreativesSummaryView({ data, loading, error }: AdCreat
   if (loading) {
     return (
       <div className="bg-gray-900 rounded-lg border border-gray-700 p-3 shadow-sm animate-pulse">
-        <div className="h-4 bg-gray-100 rounded w-24 mb-3" />
+        <div className="h-4 bg-gray-700 rounded w-24 mb-3" />
         <div className="grid grid-cols-2 gap-2">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-8 bg-gray-100 rounded" />
+            <div key={i} className="h-8 bg-gray-700 rounded" />
           ))}
         </div>
       </div>
