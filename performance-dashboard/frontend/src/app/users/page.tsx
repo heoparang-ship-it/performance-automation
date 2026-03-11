@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Users, UserPlus, Shield, Pencil, Trash2 } from "lucide-react";
 import { api, AuthUser, UserCreate } from "@/lib/api";
 import { useAuth } from "@/components/AuthProvider";
 
@@ -12,9 +13,9 @@ const ROLE_LABELS: Record<string, string> = {
 };
 
 const ROLE_COLORS: Record<string, string> = {
-  master: "bg-purple-100 text-purple-700 border-purple-200",
-  admin: "bg-blue-100 text-blue-700 border-blue-200",
-  staff: "bg-gray-100 text-gray-700 border-gray-200",
+  master: "bg-purple-950/40 text-purple-400 border-purple-700",
+  admin: "bg-emerald-950/40 text-emerald-400 border-emerald-700",
+  staff: "bg-gray-800 text-gray-200 border-gray-700",
 };
 
 export default function UsersPage() {
@@ -94,7 +95,7 @@ export default function UsersPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="w-8 h-8 border-[3px] border-blue-600 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-[3px] border-emerald-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -104,38 +105,42 @@ export default function UsersPage() {
       {/* 헤더 */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-gray-900">담당자 관리</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="text-xl font-bold text-gray-100 flex items-center gap-2">
+            <Users className="w-5 h-5 text-emerald-400" />
+            담당자 관리
+          </h1>
+          <p className="text-sm text-gray-400 mt-1">
             담당자 계정을 생성하고 권한을 관리합니다
           </p>
         </div>
         <button
           onClick={() => setShowCreate(true)}
-          className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
+          className="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors shadow-sm flex items-center gap-1.5"
         >
-          + 담당자 추가
+          <UserPlus className="w-4 h-4" />
+          담당자 추가
         </button>
       </div>
 
       {/* 사용자 목록 */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-gray-900 rounded-xl border border-gray-700 shadow-sm overflow-hidden">
         <table className="w-full text-sm">
           <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
-              <th className="text-left px-5 py-3 font-medium text-gray-500">이름</th>
-              <th className="text-left px-5 py-3 font-medium text-gray-500">이메일</th>
-              <th className="text-left px-5 py-3 font-medium text-gray-500">역할</th>
-              <th className="text-left px-5 py-3 font-medium text-gray-500">생성일</th>
-              <th className="text-right px-5 py-3 font-medium text-gray-500">관리</th>
+            <tr className="bg-gray-800 border-b border-gray-700">
+              <th className="text-left px-5 py-3 font-medium text-gray-400">이름</th>
+              <th className="text-left px-5 py-3 font-medium text-gray-400">이메일</th>
+              <th className="text-left px-5 py-3 font-medium text-gray-400">역할</th>
+              <th className="text-left px-5 py-3 font-medium text-gray-400">생성일</th>
+              <th className="text-right px-5 py-3 font-medium text-gray-400">관리</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-gray-700">
             {users.map((u) => (
-              <tr key={u.id} className="hover:bg-gray-50/50 transition-colors">
-                <td className="px-5 py-3.5 font-medium text-gray-900">
+              <tr key={u.id} className="hover:bg-gray-800/50 transition-colors">
+                <td className="px-5 py-3.5 font-medium text-gray-100">
                   {u.name}
                 </td>
-                <td className="px-5 py-3.5 text-gray-600">{u.email}</td>
+                <td className="px-5 py-3.5 text-gray-300">{u.email}</td>
                 <td className="px-5 py-3.5">
                   <span
                     className={`inline-flex px-2 py-0.5 text-xs font-medium rounded-full border ${
@@ -145,7 +150,7 @@ export default function UsersPage() {
                     {ROLE_LABELS[u.role] || u.role}
                   </span>
                 </td>
-                <td className="px-5 py-3.5 text-gray-500">
+                <td className="px-5 py-3.5 text-gray-400">
                   {new Date(u.created_at).toLocaleDateString("ko-KR")}
                 </td>
                 <td className="px-5 py-3.5 text-right">
@@ -156,14 +161,16 @@ export default function UsersPage() {
                           setEditUser(u);
                           setEditRole(u.role);
                         }}
-                        className="text-xs text-blue-600 hover:text-blue-700 font-medium"
+                        className="text-xs text-emerald-400 hover:text-emerald-300 font-medium flex items-center gap-1"
                       >
+                        <Pencil className="w-3 h-3" />
                         역할 변경
                       </button>
                       <button
                         onClick={() => handleDelete(u.id, u.name)}
-                        className="text-xs text-red-500 hover:text-red-600 font-medium"
+                        className="text-xs text-red-400 hover:text-red-300 font-medium flex items-center gap-1"
                       >
+                        <Trash2 className="w-3 h-3" />
                         삭제
                       </button>
                     </div>
@@ -182,14 +189,14 @@ export default function UsersPage() {
 
       {/* 생성 모달 */}
       {showCreate && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+          <div className="bg-gray-900 rounded-2xl w-full max-w-md p-6 shadow-2xl border border-gray-700">
+            <h2 className="text-lg font-bold text-gray-100 mb-4">
               담당자 추가
             </h2>
             <form onSubmit={handleCreate} className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">
+                <label className="block text-xs font-medium text-gray-400 mb-1">
                   이름
                 </label>
                 <input
@@ -198,13 +205,13 @@ export default function UsersPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
                   placeholder="홍길동"
                   required
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">
+                <label className="block text-xs font-medium text-gray-400 mb-1">
                   이메일
                 </label>
                 <input
@@ -213,13 +220,13 @@ export default function UsersPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
                   placeholder="user@example.com"
                   required
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">
+                <label className="block text-xs font-medium text-gray-400 mb-1">
                   비밀번호
                 </label>
                 <input
@@ -228,14 +235,14 @@ export default function UsersPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
                   placeholder="비밀번호"
                   required
                   minLength={4}
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">
+                <label className="block text-xs font-medium text-gray-400 mb-1">
                   역할
                 </label>
                 <select
@@ -246,7 +253,7 @@ export default function UsersPage() {
                       role: e.target.value as "admin" | "staff",
                     })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
                 >
                   <option value="staff">담당자</option>
                   <option value="admin">관리자</option>
@@ -254,7 +261,7 @@ export default function UsersPage() {
               </div>
 
               {error && (
-                <p className="text-sm text-red-500 bg-red-50 rounded-lg p-2 border border-red-200">
+                <p className="text-sm text-red-400 bg-red-950/30 rounded-lg p-2 border border-red-800">
                   {error}
                 </p>
               )}
@@ -266,14 +273,14 @@ export default function UsersPage() {
                     setShowCreate(false);
                     setError("");
                   }}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                  className="flex-1 px-4 py-2 border border-gray-600 rounded-lg text-sm text-gray-200 hover:bg-gray-800 transition-colors"
                 >
                   취소
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                  className="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 disabled:opacity-50 transition-colors"
                 >
                   {saving ? "생성 중..." : "생성"}
                 </button>
@@ -285,18 +292,18 @@ export default function UsersPage() {
 
       {/* 역할 변경 모달 */}
       {editUser && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl">
-            <h2 className="text-lg font-bold text-gray-900 mb-1">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+          <div className="bg-gray-900 rounded-2xl w-full max-w-sm p-6 shadow-2xl border border-gray-700">
+            <h2 className="text-lg font-bold text-gray-100 mb-1">
               역할 변경
             </h2>
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm text-gray-400 mb-4">
               {editUser.name} ({editUser.email})
             </p>
             <select
               value={editRole}
               onChange={(e) => setEditRole(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none mb-4"
+              className="w-full px-3 py-2 border border-gray-600 bg-gray-800 text-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none mb-4"
             >
               <option value="staff">담당자</option>
               <option value="admin">관리자</option>
@@ -304,13 +311,13 @@ export default function UsersPage() {
             <div className="flex gap-3">
               <button
                 onClick={() => setEditUser(null)}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                className="flex-1 px-4 py-2 border border-gray-600 rounded-lg text-sm text-gray-200 hover:bg-gray-800 transition-colors"
               >
                 취소
               </button>
               <button
                 onClick={() => handleRoleChange(editUser.id)}
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                className="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors"
               >
                 변경
               </button>

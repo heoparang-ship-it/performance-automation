@@ -48,17 +48,17 @@ type StatusFilter = "all" | "excellent" | "danger";
 
 // ── 소재 상태 매핑 ──
 const AD_STATUS: Record<string, { label: string; color: string }> = {
-  ELIGIBLE: { label: "활성", color: "text-emerald-600 bg-emerald-50" },
-  SERVING: { label: "활성", color: "text-emerald-600 bg-emerald-50" },
-  PAUSED: { label: "중지", color: "text-gray-500 bg-gray-100" },
-  PENDING_REVIEW: { label: "심사중", color: "text-amber-600 bg-amber-50" },
-  UNDER_REVIEW: { label: "심사중", color: "text-amber-600 bg-amber-50" },
-  REJECTED: { label: "거부", color: "text-red-600 bg-red-50" },
-  DELETED: { label: "삭제", color: "text-gray-400 bg-gray-50" },
+  ELIGIBLE: { label: "활성", color: "text-emerald-400 bg-emerald-950/20" },
+  SERVING: { label: "활성", color: "text-emerald-400 bg-emerald-950/20" },
+  PAUSED: { label: "중지", color: "text-gray-400 bg-gray-800" },
+  PENDING_REVIEW: { label: "심사중", color: "text-amber-400 bg-amber-950/20" },
+  UNDER_REVIEW: { label: "심사중", color: "text-amber-400 bg-amber-950/20" },
+  REJECTED: { label: "거부", color: "text-red-400 bg-red-950/20" },
+  DELETED: { label: "삭제", color: "text-gray-500 bg-gray-800" },
 };
 
 function getAdStatus(status: string) {
-  return AD_STATUS[status] || { label: status || "-", color: "text-gray-500 bg-gray-100" };
+  return AD_STATUS[status] || { label: status || "-", color: "text-gray-400 bg-gray-800" };
 }
 
 export default function AdsPage() {
@@ -377,7 +377,7 @@ export default function AdsPage() {
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-3">
         <div>
-          <h2 className="text-lg font-bold text-gray-800">광고 관리</h2>
+          <h2 className="text-lg font-bold text-gray-100">광고 관리</h2>
           <p className="text-[11px] text-gray-400 mt-0.5">
             캠페인 &gt; 광고그룹 &gt; 키워드 + 소재
           </p>
@@ -387,38 +387,38 @@ export default function AdsPage() {
 
       {/* AI 추천 패널 - 가볍게 */}
       {allRecommendations.length > 0 && (
-        <div className="mb-3 bg-white rounded-lg border border-gray-150 overflow-hidden">
+        <div className="mb-3 bg-gray-900 rounded-lg border border-gray-700 overflow-hidden">
           <button
             onClick={() => setShowRecPanel(!showRecPanel)}
             className="w-full flex items-center justify-between px-3 py-1.5"
           >
             <div className="flex items-center gap-1.5">
-              <span className="text-xs font-semibold text-gray-600">
+              <span className="text-xs font-semibold text-gray-300">
                 AI 제안
               </span>
-              <span className="text-[10px] text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">
+              <span className="text-[10px] text-gray-400 bg-gray-800 px-1.5 py-0.5 rounded">
                 {allRecommendations.length}
               </span>
             </div>
-            <span className={`text-gray-300 text-[10px] transition-transform ${showRecPanel ? "rotate-90" : ""}`}>
+            <span className={`text-gray-500 text-[10px] transition-transform ${showRecPanel ? "rotate-90" : ""}`}>
               {"\u25B6"}
             </span>
           </button>
           {showRecPanel && (
-            <div className="px-3 pb-2 space-y-1 max-h-[180px] overflow-y-auto border-t border-gray-100">
+            <div className="px-3 pb-2 space-y-1 max-h-[180px] overflow-y-auto border-t border-gray-700">
               {allRecommendations.slice(0, 10).map((r, i) => {
                 const dot = {
                   HIGH: "bg-red-400",
                   MEDIUM: "bg-amber-400",
-                  LOW: "bg-blue-400",
+                  LOW: "bg-emerald-400",
                 }[r.rec.level] || "bg-gray-400";
                 return (
-                  <div key={i} className="flex items-start gap-2 text-xs py-1.5 border-b border-gray-50 last:border-0">
+                  <div key={i} className="flex items-start gap-2 text-xs py-1.5 border-b border-gray-800 last:border-0">
                     <span className={`w-1.5 h-1.5 rounded-full shrink-0 mt-1.5 ${dot}`} />
                     <div className="min-w-0">
                       <p className="text-gray-400 text-[10px]">{r.level}: {r.name}</p>
-                      <p className="text-gray-600 leading-relaxed">{r.rec.reason}</p>
-                      <p className="text-blue-600 mt-0.5">{r.rec.action}</p>
+                      <p className="text-gray-300 leading-relaxed">{r.rec.reason}</p>
+                      <p className="text-emerald-400 mt-0.5">{r.rec.action}</p>
                     </div>
                   </div>
                 );
@@ -436,10 +436,10 @@ export default function AdsPage() {
             placeholder="검색..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full text-xs border border-gray-200 rounded-lg px-3 py-1.5 focus:ring-1 focus:ring-blue-400 focus:border-blue-400 outline-none placeholder-gray-300"
+            className="w-full text-xs border border-gray-700 bg-gray-800 text-gray-100 rounded-lg px-3 py-1.5 focus:ring-1 focus:ring-emerald-400 focus:border-emerald-400 outline-none placeholder-gray-500"
           />
         </div>
-        <div className="flex items-center gap-0.5 bg-gray-50 rounded-lg p-0.5">
+        <div className="flex items-center gap-0.5 bg-gray-800 rounded-lg p-0.5">
           {([
             { key: "all" as StatusFilter, label: `전체 ${stats.total}` },
             { key: "excellent" as StatusFilter, label: `우수 ${stats.excellent}` },
@@ -450,8 +450,8 @@ export default function AdsPage() {
               onClick={() => setStatusFilter(f.key)}
               className={`px-2.5 py-1 text-[11px] font-medium rounded-md transition-all ${
                 statusFilter === f.key
-                  ? "bg-white shadow-sm text-gray-700"
-                  : "text-gray-400 hover:text-gray-600"
+                  ? "bg-gray-900 shadow-md shadow-black/20 text-gray-200"
+                  : "text-gray-400 hover:text-gray-300"
               }`}
             >
               {f.label}
@@ -464,34 +464,34 @@ export default function AdsPage() {
       {loading ? (
         <div className="flex items-center justify-center flex-1">
           <div className="text-center space-y-2">
-            <div className="w-6 h-6 border-2 border-blue-400 border-t-transparent rounded-full animate-spin mx-auto" />
+            <div className="w-6 h-6 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin mx-auto" />
             <p className="text-xs text-gray-400">로딩 중...</p>
           </div>
         </div>
       ) : (
-        <div className="bg-white rounded-lg border border-gray-200 flex-1 min-h-0 flex flex-col overflow-hidden">
+        <div className="bg-gray-900 rounded-lg border border-gray-700 flex-1 min-h-0 flex flex-col overflow-hidden">
           <div className="overflow-auto flex-1">
             <table className="w-full text-xs">
-              <thead className="sticky top-0 bg-gray-50/90 backdrop-blur-sm z-10">
-                <tr className="border-b border-gray-200">
-                  <th className="text-left px-3 py-2 font-medium text-gray-500 min-w-[240px]">이름</th>
+              <thead className="sticky top-0 bg-gray-800/90 backdrop-blur-sm z-10">
+                <tr className="border-b border-gray-700">
+                  <th className="text-left px-3 py-2 font-medium text-gray-400 min-w-[240px]">이름</th>
                   {COLS.map((c) => (
                     <th
                       key={c.key}
-                      className="text-right px-3 py-2 font-medium text-gray-500 cursor-pointer hover:text-blue-500 whitespace-nowrap"
+                      className="text-right px-3 py-2 font-medium text-gray-400 cursor-pointer hover:text-emerald-400 whitespace-nowrap"
                       onClick={() => handleSort(c.key)}
                     >
                       {c.label} {sortCol === c.key && (sortDir === "desc" ? "\u25BC" : "\u25B2")}
                     </th>
                   ))}
-                  <th className="text-center px-2 py-2 font-medium text-gray-500 w-12">AI</th>
-                  <th className="text-center px-2 py-2 font-medium text-gray-500 w-10"></th>
+                  <th className="text-center px-2 py-2 font-medium text-gray-400 w-12">AI</th>
+                  <th className="text-center px-2 py-2 font-medium text-gray-400 w-10"></th>
                 </tr>
               </thead>
               <tbody>
                 {filteredTree.length === 0 ? (
                   <tr>
-                    <td colSpan={COLS.length + 3} className="text-center py-8 text-gray-300 text-xs">
+                    <td colSpan={COLS.length + 3} className="text-center py-8 text-gray-500 text-xs">
                       {searchQuery || statusFilter !== "all" ? "검색 결과가 없습니다" : "캠페인 데이터가 없습니다"}
                     </td>
                   </tr>
@@ -519,12 +519,12 @@ export default function AdsPage() {
 // ── AI 추천 뱃지 ──
 const RecBadge = memo(function RecBadge({ rec }: { rec: AIRecommendation | null }) {
   const [showTooltip, setShowTooltip] = useState(false);
-  if (!rec) return <span className="text-gray-200 text-[10px]">-</span>;
+  if (!rec) return <span className="text-gray-600 text-[10px]">-</span>;
 
   const dot = {
     HIGH: "bg-red-400",
     MEDIUM: "bg-amber-400",
-    LOW: "bg-blue-400",
+    LOW: "bg-emerald-400",
   }[rec.level] || "bg-gray-400";
 
   return (
@@ -537,9 +537,9 @@ const RecBadge = memo(function RecBadge({ rec }: { rec: AIRecommendation | null 
         <span className={`block w-2 h-2 rounded-full ${dot}`} />
       </button>
       {showTooltip && (
-        <div className="absolute z-50 bottom-full right-0 mb-1 w-60 bg-gray-800 text-white rounded-lg p-2.5 shadow-lg text-[11px]">
+        <div className="absolute z-50 bottom-full right-0 mb-1 w-60 bg-gray-800 text-white rounded-lg p-2.5 shadow-lg shadow-black/20 text-[11px]">
           <p className="text-gray-200 leading-relaxed">{rec.reason}</p>
-          <p className="text-blue-300 mt-1">{rec.action}</p>
+          <p className="text-emerald-300 mt-1">{rec.action}</p>
           <div className="absolute bottom-0 right-3 translate-y-1/2 rotate-45 w-2 h-2 bg-gray-800" />
         </div>
       )}
@@ -565,24 +565,24 @@ const CampaignRows = memo(function CampaignRows({
   return (
     <>
       <tr
-        className="border-b border-gray-100 hover:bg-gray-50/50 cursor-pointer"
+        className="border-b border-gray-800 hover:bg-gray-800/50 cursor-pointer"
         onClick={() => onToggleCampaign(campaign.key)}
       >
         <td className="px-3 py-2">
           <div className="flex items-center gap-2">
-            <span className="text-gray-300 text-[10px] w-4 text-center">
+            <span className="text-gray-500 text-[10px] w-4 text-center">
               {campaign.isLoading ? (
-                <span className="inline-block w-3 h-3 border-2 border-blue-300 border-t-transparent rounded-full animate-spin" />
+                <span className="inline-block w-3 h-3 border-2 border-emerald-300 border-t-transparent rounded-full animate-spin" />
               ) : campaign.isExpanded ? "\u25BC" : "\u25B6"}
             </span>
-            <span className="font-medium text-gray-800 text-[13px]">{campaign.name}</span>
+            <span className="font-medium text-gray-100 text-[13px]">{campaign.name}</span>
           </div>
         </td>
         {cols.map((c) => {
           const deltaVal = c.deltaKey && campaign.deltas ? (campaign.deltas as unknown as Record<string, number>)[c.deltaKey] as number : null;
           return (
             <td key={c.key} className="text-right px-3 py-2">
-              <div className="text-gray-600 text-xs">{c.fmt((campaign as unknown as Record<string, number>)[c.key] as number)}</div>
+              <div className="text-gray-300 text-xs">{c.fmt((campaign as unknown as Record<string, number>)[c.key] as number)}</div>
               {c.deltaKey && <DeltaIndicator value={deltaVal} inverse={c.inverse} />}
             </td>
           );
@@ -626,24 +626,24 @@ const AdgroupRows = memo(function AdgroupRows({
   return (
     <>
       <tr
-        className="border-b border-gray-50 hover:bg-gray-50/50 cursor-pointer"
+        className="border-b border-gray-800 hover:bg-gray-800/50 cursor-pointer"
         onClick={() => onToggleAdgroup(campaignKey, adgroup.key)}
       >
         <td className="px-3 py-1.5">
           <div className="flex items-center gap-2 pl-6">
-            <span className="text-gray-300 text-[10px] w-4 text-center">
+            <span className="text-gray-500 text-[10px] w-4 text-center">
               {adgroup.isLoading ? (
-                <span className="inline-block w-3 h-3 border-2 border-blue-300 border-t-transparent rounded-full animate-spin" />
+                <span className="inline-block w-3 h-3 border-2 border-emerald-300 border-t-transparent rounded-full animate-spin" />
               ) : adgroup.isExpanded ? "\u25BC" : "\u25B6"}
             </span>
-            <span className="text-gray-600 text-[12px]">{adgroup.name}</span>
+            <span className="text-gray-300 text-[12px]">{adgroup.name}</span>
           </div>
         </td>
         {cols.map((c) => {
           const deltaVal = c.deltaKey && adgroup.deltas ? (adgroup.deltas as unknown as Record<string, number>)[c.deltaKey] as number : null;
           return (
             <td key={c.key} className="text-right px-3 py-1.5">
-              <div className="text-gray-500 text-[12px]">{c.fmt((adgroup as unknown as Record<string, number>)[c.key] as number)}</div>
+              <div className="text-gray-400 text-[12px]">{c.fmt((adgroup as unknown as Record<string, number>)[c.key] as number)}</div>
               {c.deltaKey && <DeltaIndicator value={deltaVal} inverse={c.inverse} />}
             </td>
           );
@@ -660,11 +660,11 @@ const AdgroupRows = memo(function AdgroupRows({
         <>
           {/* 키워드 행 */}
           {sortNodes(adgroup.children).map((keyword) => (
-            <tr key={keyword.key} className="border-b border-gray-50 hover:bg-gray-50/30">
+            <tr key={keyword.key} className="border-b border-gray-800 hover:bg-gray-800/30">
               <td className="px-3 py-1">
                 <div className="flex items-center gap-1.5 pl-14">
-                  <span className="text-gray-200 text-[10px]">{"\u2500"}</span>
-                  <span className="text-gray-500 text-[11px]">{keyword.name}</span>
+                  <span className="text-gray-600 text-[10px]">{"\u2500"}</span>
+                  <span className="text-gray-400 text-[11px]">{keyword.name}</span>
                 </div>
               </td>
               {cols.map((c) => {
@@ -677,7 +677,7 @@ const AdgroupRows = memo(function AdgroupRows({
                 );
               })}
               <td className="text-center px-2 py-1">
-                <span className="text-gray-200 text-[10px]">-</span>
+                <span className="text-gray-600 text-[10px]">-</span>
               </td>
               <td className="text-center px-2 py-1">
                 <StatusBadge roas={keyword.roas} clicks={keyword.clicks} conversions={keyword.conversions} />
@@ -702,15 +702,15 @@ const AdgroupRows = memo(function AdgroupRows({
                 const displayName = ad.headline || ad.product_title || "(제목 없음)";
                 const adTypeLabel = ad.type === "SHOPPING_PRODUCT_AD" ? "쇼핑" : "텍스트";
                 return (
-                  <tr key={`ad:${ad.ad_id || i}`} className="border-b border-gray-50 hover:bg-gray-50/30">
+                  <tr key={`ad:${ad.ad_id || i}`} className="border-b border-gray-800 hover:bg-gray-800/30">
                     <td colSpan={cols.length + 1} className="px-3 py-1">
                       <div className="flex items-center gap-1.5 pl-14">
-                        <span className="text-gray-200 text-[10px]">{"\u2500"}</span>
+                        <span className="text-gray-600 text-[10px]">{"\u2500"}</span>
                         <span className={`text-[9px] px-1 py-0.5 rounded ${statusInfo.color}`}>
                           {statusInfo.label}
                         </span>
                         <span className="text-[9px] text-gray-400">{adTypeLabel}</span>
-                        <span className="text-gray-600 text-[11px] truncate max-w-[300px]">
+                        <span className="text-gray-300 text-[11px] truncate max-w-[300px]">
                           {displayName}
                         </span>
                         {ad.price && (
@@ -719,7 +719,7 @@ const AdgroupRows = memo(function AdgroupRows({
                           </span>
                         )}
                         {ad.review_count && Number(ad.review_count) > 0 && (
-                          <span className="text-[10px] text-gray-300">
+                          <span className="text-[10px] text-gray-500">
                             리뷰 {ad.review_count}
                           </span>
                         )}

@@ -51,12 +51,12 @@ export default function KeywordToolPanel({ storeId }: KeywordToolPanelProps) {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSearch()}
           placeholder="키워드 입력 (쉼표로 구분)"
-          className="flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="flex-1 border border-gray-600 rounded px-3 py-1.5 text-sm bg-gray-900 text-gray-100 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
         />
         <button
           onClick={handleSearch}
           disabled={loading}
-          className="px-4 py-1.5 bg-blue-500 text-white rounded text-sm font-medium hover:bg-blue-600 disabled:opacity-50"
+          className="px-4 py-1.5 bg-emerald-500 text-white rounded text-sm font-medium hover:bg-emerald-600 disabled:opacity-50"
         >
           {loading ? "조회 중..." : "조회"}
         </button>
@@ -68,7 +68,7 @@ export default function KeywordToolPanel({ storeId }: KeywordToolPanelProps) {
         <div className="overflow-x-auto">
           <table className="w-full text-xs">
             <thead>
-              <tr className="text-gray-400 border-b text-left">
+              <tr className="text-gray-400 border-b border-gray-700 text-left">
                 <th className="py-2 font-medium">키워드</th>
                 <th className="py-2 font-medium text-right">PC 검색량</th>
                 <th className="py-2 font-medium text-right">모바일 검색량</th>
@@ -78,20 +78,20 @@ export default function KeywordToolPanel({ storeId }: KeywordToolPanelProps) {
             </thead>
             <tbody>
               {results.map((r, i) => (
-                <tr key={i} className="border-b border-gray-50 hover:bg-gray-50">
-                  <td className="py-2 text-gray-700 font-medium">{r.keyword}</td>
-                  <td className="py-2 text-right text-gray-600">{formatNum(r.monthly_pc_qc_cnt)}</td>
-                  <td className="py-2 text-right text-gray-600">{formatNum(r.monthly_mobile_qc_cnt)}</td>
+                <tr key={i} className="border-b border-gray-800 hover:bg-gray-800">
+                  <td className="py-2 text-gray-200 font-medium">{r.keyword}</td>
+                  <td className="py-2 text-right text-gray-300">{formatNum(r.monthly_pc_qc_cnt)}</td>
+                  <td className="py-2 text-right text-gray-300">{formatNum(r.monthly_mobile_qc_cnt)}</td>
                   <td className="py-2 text-right">
                     <span className={`inline-flex px-1.5 py-0.5 rounded text-[10px] font-medium ${
-                      r.comp_idx === "HIGH" ? "bg-red-100 text-red-700" :
-                      r.comp_idx === "MEDIUM" ? "bg-amber-100 text-amber-700" :
-                      "bg-emerald-100 text-emerald-700"
+                      r.comp_idx === "HIGH" ? "bg-red-900/30 text-red-400" :
+                      r.comp_idx === "MEDIUM" ? "bg-amber-900/30 text-amber-400" :
+                      "bg-emerald-900/30 text-emerald-400"
                     }`}>
                       {compLabel(r.comp_idx)}
                     </span>
                   </td>
-                  <td className="py-2 text-right text-gray-600">{formatNum(r.pl_avg_depth)}원</td>
+                  <td className="py-2 text-right text-gray-300">{formatNum(r.pl_avg_depth)}원</td>
                 </tr>
               ))}
             </tbody>

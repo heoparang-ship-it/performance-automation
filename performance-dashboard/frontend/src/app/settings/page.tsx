@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { CheckCircle, Settings, Link, Unlink, RefreshCw, Trash2, Database, FlaskConical } from "lucide-react";
 import {
   api,
   ThresholdSettings,
@@ -192,7 +193,7 @@ export default function SettingsPage() {
         name: customer.name || customer.login_id || `광고주 ${customer.customer_id}`,
         customer_id: customer.customer_id,
       });
-      setNaverMsg(`✅ '${customer.name || customer.customer_id}' 광고주가 연결되었습니다!`);
+      setNaverMsg(`'${customer.name || customer.customer_id}' 광고주가 연결되었습니다!`);
       await refreshStores();
     } catch (e: any) {
       setNaverMsg(`연결 오류: ${e.message}`);
@@ -212,26 +213,29 @@ export default function SettingsPage() {
 
   return (
     <div className="max-w-2xl">
-      <h2 className="text-xl font-bold mb-6">설정</h2>
+      <h2 className="text-xl font-bold mb-6 text-gray-100">
+        <Settings className="inline-block w-5 h-5 mr-2 text-emerald-400" />
+        설정
+      </h2>
 
       {/* 네이버 API 연동 */}
       <section className="mb-8">
-        <h3 className="text-sm font-bold text-gray-700 mb-3">
+        <h3 className="text-sm font-bold text-gray-200 mb-3">
           네이버 검색광고 API 연동
         </h3>
-        <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
+        <div className="bg-gray-900 rounded-lg border border-gray-700 p-4 space-y-4">
           {/* 현재 상태 */}
           {naverStatus?.is_configured ? (
-            <div className="flex items-center justify-between bg-green-50 rounded p-3">
+            <div className="flex items-center justify-between bg-emerald-950/30 rounded p-3">
               <div>
-                <span className="text-sm font-medium text-green-700">API 연결됨</span>
-                <span className="text-xs text-gray-500 ml-2">
+                <span className="text-sm font-medium text-emerald-400">API 연결됨</span>
+                <span className="text-xs text-gray-400 ml-2">
                   Key: {naverStatus.api_key_masked} | ID: {naverStatus.customer_id}
                 </span>
               </div>
               <div className="flex gap-2">
                 <button
-                  className="text-xs text-blue-600 hover:underline"
+                  className="text-xs text-emerald-400 hover:underline"
                   onClick={handleTestConnection}
                   disabled={connectionTest.testing}
                 >
@@ -246,61 +250,61 @@ export default function SettingsPage() {
               </div>
             </div>
           ) : (
-            <div className="bg-yellow-50 rounded p-3">
-              <span className="text-sm text-yellow-700">API 미연결 - 아래에서 인증 정보를 입력하세요</span>
+            <div className="bg-yellow-950/30 rounded p-3">
+              <span className="text-sm text-yellow-400">API 미연결 - 아래에서 인증 정보를 입력하세요</span>
             </div>
           )}
 
           {/* 연결 테스트 결과 */}
           {connectionTest.result && (
-            <div className={`text-sm p-2 rounded ${connectionTest.success ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}>
+            <div className={`text-sm p-2 rounded ${connectionTest.success ? "bg-emerald-950/30 text-emerald-400" : "bg-red-950/30 text-red-400"}`}>
               {connectionTest.result}
             </div>
           )}
 
           {/* 인증 정보 입력 */}
           <div className="space-y-3">
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-400">
               네이버 검색광고 &gt; 도구 &gt; API 사용 관리에서 발급받은 정보를 입력하세요
             </p>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">
+              <label className="block text-xs font-medium text-gray-300 mb-1">
                 API License (Access Key)
               </label>
               <input
                 type="text"
-                className="w-full border border-gray-300 rounded px-3 py-1.5 text-sm"
+                className="w-full border border-gray-600 bg-gray-800 text-gray-100 rounded px-3 py-1.5 text-sm"
                 placeholder="API License Key"
                 value={naverCreds.api_key}
                 onChange={(e) => setNaverCreds({ ...naverCreds, api_key: e.target.value })}
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">
+              <label className="block text-xs font-medium text-gray-300 mb-1">
                 Secret Key
               </label>
               <input
                 type="password"
-                className="w-full border border-gray-300 rounded px-3 py-1.5 text-sm"
+                className="w-full border border-gray-600 bg-gray-800 text-gray-100 rounded px-3 py-1.5 text-sm"
                 placeholder="Secret Key"
                 value={naverCreds.secret_key}
                 onChange={(e) => setNaverCreds({ ...naverCreds, secret_key: e.target.value })}
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">
+              <label className="block text-xs font-medium text-gray-300 mb-1">
                 Customer ID (담당자 본인)
               </label>
               <input
                 type="text"
-                className="w-full border border-gray-300 rounded px-3 py-1.5 text-sm"
+                className="w-full border border-gray-600 bg-gray-800 text-gray-100 rounded px-3 py-1.5 text-sm"
                 placeholder="예: 1234567"
                 value={naverCreds.customer_id}
                 onChange={(e) => setNaverCreds({ ...naverCreds, customer_id: e.target.value })}
               />
             </div>
             <button
-              className="w-full py-2 bg-primary text-white rounded text-sm font-medium hover:opacity-90 disabled:opacity-50"
+              className="w-full py-2 bg-emerald-600 text-white rounded text-sm font-medium hover:bg-emerald-700 disabled:opacity-50"
               onClick={handleSaveNaver}
               disabled={naverSaving}
             >
@@ -309,7 +313,7 @@ export default function SettingsPage() {
           </div>
 
           {naverMsg && (
-            <p className="text-sm text-blue-600">{naverMsg}</p>
+            <p className="text-sm text-emerald-400">{naverMsg}</p>
           )}
         </div>
       </section>
@@ -317,15 +321,15 @@ export default function SettingsPage() {
       {/* 담당 광고주 연결 */}
       {naverStatus?.is_configured && (
         <section className="mb-8">
-          <h3 className="text-sm font-bold text-gray-700 mb-3">
+          <h3 className="text-sm font-bold text-gray-200 mb-3">
             광고주 연결
           </h3>
-          <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
-            <p className="text-xs text-gray-500">
+          <div className="bg-gray-900 rounded-lg border border-gray-700 p-4 space-y-4">
+            <p className="text-xs text-gray-400">
               광고주를 선택하면 자동으로 연결되며, 실시간 성과 데이터를 확인할 수 있습니다.
             </p>
             <button
-              className="px-4 py-1.5 bg-primary text-white text-sm rounded hover:opacity-80 disabled:opacity-50"
+              className="px-4 py-1.5 bg-emerald-600 text-white text-sm rounded hover:bg-emerald-700 disabled:opacity-50"
               onClick={handleLoadCustomers}
               disabled={loadingCustomers}
             >
@@ -334,7 +338,7 @@ export default function SettingsPage() {
 
             {customers.length > 0 && (
               <div className="space-y-2">
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-400">
                   담당 광고주 {customers.length}개
                 </p>
                 <ul className="space-y-1">
@@ -345,17 +349,17 @@ export default function SettingsPage() {
                         key={c.customer_id}
                         className={`flex items-center justify-between py-2 px-3 rounded border ${
                           isLinked
-                            ? "bg-green-50 border-green-200"
+                            ? "bg-emerald-950/30 border-emerald-700"
                             : selectedCustomer === c.customer_id
-                            ? "bg-blue-50 border-blue-200"
-                            : "border-gray-100 hover:bg-gray-50"
+                            ? "bg-emerald-950/20 border-emerald-700"
+                            : "border-gray-700 hover:bg-gray-800"
                         }`}
                       >
                         <div
                           className="flex-1 cursor-pointer"
                           onClick={() => handleLoadOverview(c.customer_id)}
                         >
-                          <span className="text-sm font-medium text-gray-800">
+                          <span className="text-sm font-medium text-gray-100">
                             {c.name || c.login_id || c.customer_id}
                           </span>
                           <span className="text-xs text-gray-400 ml-2">
@@ -363,12 +367,12 @@ export default function SettingsPage() {
                           </span>
                         </div>
                         {isLinked ? (
-                          <span className="text-xs text-green-600 font-medium px-2 py-1 bg-green-100 rounded">
-                            ✅ 연결됨
+                          <span className="text-xs text-emerald-400 font-medium px-2 py-1 bg-emerald-950/40 rounded flex items-center gap-1">
+                            <CheckCircle className="w-3 h-3" /> 연결됨
                           </span>
                         ) : (
                           <button
-                            className="text-xs text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded font-medium disabled:opacity-50"
+                            className="text-xs text-white bg-emerald-600 hover:bg-emerald-700 px-3 py-1 rounded font-medium disabled:opacity-50"
                             onClick={() => handleLinkCustomer(c)}
                             disabled={linking}
                           >
@@ -387,35 +391,35 @@ export default function SettingsPage() {
               <p className="text-sm text-gray-400">캠페인/광고그룹 조회 중...</p>
             )}
             {accountOverview && (
-              <div className="bg-gray-50 rounded p-3 space-y-2">
-                <p className="text-sm font-medium text-gray-700">
+              <div className="bg-gray-800 rounded p-3 space-y-2">
+                <p className="text-sm font-medium text-gray-200">
                   계정 구조 ({accountOverview.customer_id})
                 </p>
                 <div className="grid grid-cols-3 gap-2 text-center">
-                  <div className="bg-white rounded p-2">
-                    <div className="text-lg font-bold text-primary">
+                  <div className="bg-gray-900 rounded p-2">
+                    <div className="text-lg font-bold text-emerald-400">
                       {accountOverview.campaigns.length}
                     </div>
-                    <div className="text-xs text-gray-500">캠페인</div>
+                    <div className="text-xs text-gray-400">캠페인</div>
                   </div>
-                  <div className="bg-white rounded p-2">
-                    <div className="text-lg font-bold text-primary">
+                  <div className="bg-gray-900 rounded p-2">
+                    <div className="text-lg font-bold text-emerald-400">
                       {accountOverview.adgroups.length}
                     </div>
-                    <div className="text-xs text-gray-500">광고그룹</div>
+                    <div className="text-xs text-gray-400">광고그룹</div>
                   </div>
-                  <div className="bg-white rounded p-2">
-                    <div className="text-lg font-bold text-primary">
+                  <div className="bg-gray-900 rounded p-2">
+                    <div className="text-lg font-bold text-emerald-400">
                       {accountOverview.keywords_count}
                     </div>
-                    <div className="text-xs text-gray-500">키워드</div>
+                    <div className="text-xs text-gray-400">키워드</div>
                   </div>
                 </div>
                 <div className="mt-2 space-y-1">
                   {accountOverview.campaigns.map((c) => (
-                    <div key={c.campaign_id} className="text-xs text-gray-600 flex justify-between bg-white px-2 py-1 rounded">
+                    <div key={c.campaign_id} className="text-xs text-gray-300 flex justify-between bg-gray-900 px-2 py-1 rounded">
                       <span>{c.name}</span>
-                      <span className={`${c.status === "ELIGIBLE" ? "text-green-600" : "text-gray-400"}`}>
+                      <span className={`${c.status === "ELIGIBLE" ? "text-emerald-400" : "text-gray-400"}`}>
                         {c.status === "ELIGIBLE" ? "활성" : c.status}
                         {c.budget > 0 && ` | 일예산 ${formatKRW(c.budget)}`}
                       </span>
@@ -431,16 +435,16 @@ export default function SettingsPage() {
       {/* 연결된 광고주 목록 */}
       {stores.length > 0 && (
         <section className="mb-8">
-          <h3 className="text-sm font-bold text-gray-700 mb-3">연결된 광고주</h3>
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <h3 className="text-sm font-bold text-gray-200 mb-3">연결된 광고주</h3>
+          <div className="bg-gray-900 rounded-lg border border-gray-700 p-4">
             <ul className="space-y-1">
               {stores.map((s) => (
                 <li
                   key={s.id}
-                  className="flex items-center justify-between py-1.5 px-2 rounded hover:bg-gray-50"
+                  className="flex items-center justify-between py-1.5 px-2 rounded hover:bg-gray-800"
                 >
                   <div>
-                    <span className="text-sm text-gray-800 font-medium">{s.name}</span>
+                    <span className="text-sm text-gray-100 font-medium">{s.name}</span>
                     {s.customer_id && (
                       <span className="text-xs text-gray-400 ml-2">ID: {s.customer_id}</span>
                     )}
@@ -460,30 +464,30 @@ export default function SettingsPage() {
 
       {/* 임계값 설정 */}
       <section>
-        <h3 className="text-sm font-bold text-gray-700 mb-3">
+        <h3 className="text-sm font-bold text-gray-200 mb-3">
           분석 규칙 임계값
         </h3>
         {settings ? (
-          <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
+          <div className="bg-gray-900 rounded-lg border border-gray-700 p-4 space-y-4">
             {FIELDS.map((f) => (
               <div key={f.key}>
-                <label className="block text-xs font-medium text-gray-600 mb-1">
+                <label className="block text-xs font-medium text-gray-300 mb-1">
                   {f.label}
                 </label>
                 <div className="flex items-center gap-2">
                   <input
                     type="number"
                     step={f.step}
-                    className="border border-gray-300 rounded px-3 py-1.5 text-sm w-32"
+                    className="border border-gray-600 bg-gray-800 text-gray-100 rounded px-3 py-1.5 text-sm w-32"
                     value={settings[f.key]}
                     onChange={(e) => handleChange(f.key, e.target.value)}
                   />
-                  <span className="text-xs text-gray-500">{f.unit}</span>
+                  <span className="text-xs text-gray-400">{f.unit}</span>
                 </div>
               </div>
             ))}
             <button
-              className="w-full py-2 bg-primary text-white rounded text-sm font-medium hover:opacity-90"
+              className="w-full py-2 bg-emerald-600 text-white rounded text-sm font-medium hover:bg-emerald-700"
               onClick={handleSave}
             >
               {saved ? "저장 완료!" : "저장"}

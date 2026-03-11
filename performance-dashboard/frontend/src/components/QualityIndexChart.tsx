@@ -16,12 +16,12 @@ export default React.memo(function QualityIndexChart({ distribution, details, lo
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg border border-gray-100 p-3 shadow-sm">
-        <div className="h-4 bg-gray-100 rounded w-24 mb-3" />
+      <div className="bg-gray-900 rounded-lg border border-gray-700 p-3 shadow-sm">
+        <div className="h-4 bg-gray-700 rounded w-24 mb-3" />
         <div className="space-y-2 animate-pulse">
-          <div className="h-3 bg-gray-100 rounded" />
-          <div className="h-3 bg-gray-100 rounded w-3/4" />
-          <div className="h-3 bg-gray-100 rounded w-1/2" />
+          <div className="h-3 bg-gray-700 rounded" />
+          <div className="h-3 bg-gray-700 rounded w-3/4" />
+          <div className="h-3 bg-gray-700 rounded w-1/2" />
         </div>
       </div>
     );
@@ -29,7 +29,7 @@ export default React.memo(function QualityIndexChart({ distribution, details, lo
 
   if (error) {
     return (
-      <div className="bg-white rounded-lg border border-gray-100 p-3 shadow-sm">
+      <div className="bg-gray-900 rounded-lg border border-gray-700 p-3 shadow-sm">
         <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wider mb-2">품질지수 분포</p>
         <p className="text-xs text-gray-400">품질지수를 불러올 수 없습니다</p>
       </div>
@@ -39,13 +39,13 @@ export default React.memo(function QualityIndexChart({ distribution, details, lo
   const { high, medium, low, total } = distribution;
 
   const bars = [
-    { label: "우수 (8-10)", count: high, color: "bg-emerald-500", textColor: "text-emerald-700" },
-    { label: "보통 (4-7)", count: medium, color: "bg-amber-400", textColor: "text-amber-700" },
-    { label: "낮음 (1-3)", count: low, color: "bg-red-400", textColor: "text-red-700" },
+    { label: "우수 (8-10)", count: high, color: "bg-emerald-500", textColor: "text-emerald-400" },
+    { label: "보통 (4-7)", count: medium, color: "bg-amber-400", textColor: "text-amber-400" },
+    { label: "낮음 (1-3)", count: low, color: "bg-red-400", textColor: "text-red-400" },
   ];
 
   return (
-    <div className="bg-white rounded-lg border border-gray-100 p-3 shadow-sm">
+    <div className="bg-gray-900 rounded-lg border border-gray-700 p-3 shadow-sm">
       <div className="flex items-center justify-between mb-2">
         <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">품질지수 분포</p>
         <span className="text-[10px] text-gray-400">총 {total}개</span>
@@ -74,7 +74,7 @@ export default React.memo(function QualityIndexChart({ distribution, details, lo
               <div key={b.label} className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-1.5">
                   <div className={`w-2 h-2 rounded-full ${b.color}`} />
-                  <span className="text-gray-600">{b.label}</span>
+                  <span className="text-gray-300">{b.label}</span>
                 </div>
                 <span className={`font-medium ${b.textColor}`}>
                   {b.count}개 ({total > 0 ? Math.round((b.count / total) * 100) : 0}%)
@@ -88,7 +88,7 @@ export default React.memo(function QualityIndexChart({ distribution, details, lo
             <>
               <button
                 onClick={() => setShowDetails(!showDetails)}
-                className="mt-2 text-[10px] text-blue-500 hover:text-blue-700"
+                className="mt-2 text-[10px] text-emerald-400 hover:text-emerald-300"
               >
                 {showDetails ? "접기" : `낮은 품질 키워드 보기 (${low}개)`}
               </button>
@@ -103,8 +103,8 @@ export default React.memo(function QualityIndexChart({ distribution, details, lo
                     </thead>
                     <tbody>
                       {details.filter(d => d.quality_index <= 3).map((d, i) => (
-                        <tr key={i} className="border-b border-gray-50">
-                          <td className="py-1 text-gray-700">{d.keyword}</td>
+                        <tr key={i} className="border-b border-gray-800">
+                          <td className="py-1 text-gray-200">{d.keyword}</td>
                           <td className="py-1 text-right">
                             <span className={`inline-flex items-center justify-center w-5 h-5 rounded text-white text-[9px] font-bold ${
                               d.quality_index <= 3 ? "bg-red-400" : d.quality_index <= 7 ? "bg-amber-400" : "bg-emerald-500"

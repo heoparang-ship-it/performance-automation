@@ -4,8 +4,8 @@ import AuthProvider from "@/components/AuthProvider";
 import AppShell from "@/components/AppShell";
 
 export const metadata: Metadata = {
-  title: "엑스컴 마케팅 대시보드",
-  description: "퍼포먼스 마케팅 광고 성과 분석 - 엑스컴AI",
+  title: "퍼포먼스 자동화 시스템",
+  description: "퍼포먼스 마케팅 광고 성과 분석 - AI 기반",
 };
 
 export default function RootLayout({
@@ -15,7 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body className="bg-slate-50 text-gray-900">
+      <body className="bg-gray-950 text-gray-100">
         <AuthProvider>
           <AppShell>{children}</AppShell>
         </AuthProvider>

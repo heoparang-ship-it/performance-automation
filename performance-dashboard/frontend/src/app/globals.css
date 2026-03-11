@@ -14,11 +14,11 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: #374151;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  background: #4b5563;
 }
 
 /* 팝업 오버레이 */
@@ -27,7 +27,7 @@ body {
   animation: fadeIn 0.15s ease-out;
 }
 .modal-content {
-  @apply bg-white rounded-2xl shadow-2xl max-h-[80vh] overflow-auto;
+  @apply bg-gray-900 rounded-2xl shadow-2xl shadow-black/40 max-h-[80vh] overflow-auto;
   animation: slideUp 0.2s ease-out;
 }
 

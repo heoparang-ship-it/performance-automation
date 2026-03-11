@@ -15,20 +15,20 @@ export default function DateRangePicker() {
   return (
     <div className="flex items-center gap-2">
       <div className="flex items-center gap-1">
-        <span className="inline-flex items-center gap-1 text-[10px] text-emerald-600 font-medium bg-emerald-50 px-2 py-1 rounded-md">
+        <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 font-medium bg-emerald-950/20 px-2 py-1 rounded-md">
           <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
           실시간
         </span>
       </div>
-      <div className="flex items-center gap-0.5 bg-gray-100 rounded-lg p-0.5">
+      <div className="flex items-center gap-0.5 bg-gray-800 rounded-lg p-0.5">
         {PRESETS.map((p) => (
           <button
             key={p.days}
             onClick={() => setPeriodDays(p.days)}
             className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${
               periodDays === p.days
-                ? "bg-white text-blue-600 shadow-sm"
-                : "text-gray-500 hover:text-gray-700"
+                ? "bg-gray-900 text-emerald-400 shadow-sm"
+                : "text-gray-400 hover:text-gray-200"
             }`}
           >
             {p.label}

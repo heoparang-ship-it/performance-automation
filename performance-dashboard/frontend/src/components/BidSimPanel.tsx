@@ -42,19 +42,19 @@ export default function BidSimPanel({ storeId }: BidSimPanelProps) {
           value={keywordId}
           onChange={(e) => setKeywordId(e.target.value)}
           placeholder="키워드 ID"
-          className="border border-gray-300 rounded px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="border border-gray-600 rounded px-3 py-1.5 text-sm bg-gray-900 text-gray-100 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
         />
         <input
           type="number"
           value={bid}
           onChange={(e) => setBid(e.target.value)}
           placeholder="입찰가 (원)"
-          className="border border-gray-300 rounded px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="border border-gray-600 rounded px-3 py-1.5 text-sm bg-gray-900 text-gray-100 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
         />
         <select
           value={device}
           onChange={(e) => setDevice(e.target.value)}
-          className="border border-gray-300 rounded px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="border border-gray-600 rounded px-3 py-1.5 text-sm bg-gray-900 text-gray-100 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
         >
           <option value="PC">PC</option>
           <option value="MOBILE">모바일</option>
@@ -62,7 +62,7 @@ export default function BidSimPanel({ storeId }: BidSimPanelProps) {
         <button
           onClick={handleSimulate}
           disabled={loading || !keywordId || !bid}
-          className="px-4 py-1.5 bg-blue-500 text-white rounded text-sm font-medium hover:bg-blue-600 disabled:opacity-50"
+          className="px-4 py-1.5 bg-emerald-500 text-white rounded text-sm font-medium hover:bg-emerald-600 disabled:opacity-50"
         >
           {loading ? "계산 중..." : "시뮬레이션"}
         </button>
@@ -72,21 +72,21 @@ export default function BidSimPanel({ storeId }: BidSimPanelProps) {
 
       {result && (
         <div className="grid grid-cols-3 gap-3">
-          <div className="bg-blue-50 rounded-lg p-3 text-center">
-            <p className="text-[10px] text-blue-500 mb-1">예상 노출수</p>
-            <p className="text-sm font-bold text-blue-700">
+          <div className="bg-emerald-950/20 rounded-lg p-3 text-center">
+            <p className="text-[10px] text-emerald-400 mb-1">예상 노출수</p>
+            <p className="text-sm font-bold text-emerald-300">
               {formatNum(Number(result.impCnt || result.estimated_impressions || 0))}
             </p>
           </div>
-          <div className="bg-emerald-50 rounded-lg p-3 text-center">
-            <p className="text-[10px] text-emerald-500 mb-1">예상 클릭수</p>
-            <p className="text-sm font-bold text-emerald-700">
+          <div className="bg-emerald-950/20 rounded-lg p-3 text-center">
+            <p className="text-[10px] text-emerald-400 mb-1">예상 클릭수</p>
+            <p className="text-sm font-bold text-emerald-300">
               {formatNum(Number(result.clkCnt || result.estimated_clicks || 0))}
             </p>
           </div>
-          <div className="bg-amber-50 rounded-lg p-3 text-center">
-            <p className="text-[10px] text-amber-500 mb-1">예상 비용</p>
-            <p className="text-sm font-bold text-amber-700">
+          <div className="bg-amber-950/20 rounded-lg p-3 text-center">
+            <p className="text-[10px] text-amber-400 mb-1">예상 비용</p>
+            <p className="text-sm font-bold text-amber-300">
               {formatKRW(Number(result.salesAmt || result.estimated_cost || 0))}
             </p>
           </div>
