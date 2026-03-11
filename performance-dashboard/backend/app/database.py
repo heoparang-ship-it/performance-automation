@@ -9,28 +9,42 @@ from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
 from .config import DATABASE_URL
 
-# data 디렉토리 자동 생성
-db_path = DATABASE_URL.replace("sqlite:///", "")
-Path(db_path).parent.mkdir(parents=True, exist_ok=True)
+_is_sqlite = DATABASE_URL.startswith("sqlite")
 
-engine = create_engine(
-    DATABASE_URL,
-    connect_args={"check_same_thread": False},
-    pool_size=5,
-    max_overflow=10,
-    pool_pre_ping=True,
-    pool_recycle=3600,
-)
+if _is_sqlite:
+    # SQLite: data 디렉토리 자동 생성
+    db_path = DATABASE_URL.replace("sqlite:///", "")
+    Path(db_path).parent.mkdir(parents=True, exist_ok=True)
+    engine = create_engine(
+        DATABASE_URL,
+        connect_args={"check_same_thread": False},
+        pool_size=5,
+        max_overflow=10,
+        pool_pre_ping=True,
+        pool_recycle=3600,
+    )
 
-# SQLite 성능 최적화: WAL 모드 + 캐시 확대
-@event.listens_for(engine, "connect")
-def _set_sqlite_pragma(dbapi_connection, connection_record):
-    cursor = dbapi_connection.cursor()
-    cursor.execute("PRAGMA journal_mode=WAL")
-    cursor.execute("PRAGMA synchronous=NORMAL")
-    cursor.execute("PRAGMA cache_size=-64000")  # 64MB
-    cursor.execute("PRAGMA temp_store=MEMORY")
-    cursor.close()
+    @event.listens_for(engine, "connect")
+    def _set_sqlite_pragma(dbapi_connection, connection_record):
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA journal_mode=WAL")
+        cursor.execute("PRAGMA synchronous=NORMAL")
+        cursor.execute("PRAGMA cache_size=-64000")
+        cursor.execute("PRAGMA temp_store=MEMORY")
+        cursor.close()
+else:
+    # PostgreSQL / 기타 DB
+    _url = DATABASE_URL
+    # Railway PostgreSQL은 postgres:// 로 시작하는데 SQLAlchemy는 postgresql:// 필요
+    if _url.startswith("postgres://"):
+        _url = _url.replace("postgres://", "postgresql://", 1)
+    engine = create_engine(
+        _url,
+        pool_size=5,
+        max_overflow=10,
+        pool_pre_ping=True,
+        pool_recycle=3600,
+    )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

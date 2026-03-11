@@ -228,6 +228,28 @@ def generate_optimization_plan(
                     )
                 )
 
+            # ── Rule 6 (P90): 노출 많고 CTR 극히 낮고 전환 0 → 제외키워드 추가 ──
+            elif imp >= 100 and ctr < 0.3 and conv <= 0 and cost > 0:
+                actions.append(
+                    ProposedAction(
+                        rule_id="rule_6",
+                        priority=90,
+                        level="HIGH",
+                        reason=(
+                            f"노출 {imp}회, CTR {ctr:.2f}% (극히 낮음), "
+                            f"전환 0건, 광고비 {cost:,.0f}원 낭비"
+                        ),
+                        action_description=(
+                            f"키워드 '{kw_text}' → 제외키워드 등록 "
+                            f"(광고그룹 '{ag_name}')"
+                        ),
+                        action_type="add_negative_keyword",
+                        before_value={},
+                        after_value={"keyword": kw_text},
+                        **common,
+                    )
+                )
+
     actions.sort(key=lambda a: a.priority, reverse=True)
     return actions
 

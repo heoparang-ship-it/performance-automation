@@ -122,6 +122,8 @@ def _build_preview_summary(
         by_level[a.level] = by_level.get(a.level, 0) + 1
         if a.action_type == "keyword_pause" and a.context:
             cost_savings += a.context.cost
+        elif a.action_type == "add_negative_keyword" and a.context:
+            cost_savings += a.context.cost
         elif a.action_type == "bid_down" and a.change_pct and a.context:
             cost_savings += int(a.context.cost * abs(a.change_pct) / 100)
 

@@ -167,8 +167,6 @@ export const api = {
   getNaverCustomers: () => request<NaverCustomer[]>("/naver/customers"),
   getNaverAccountOverview: (customerId: string) =>
     request<NaverAccountOverview>(`/naver/accounts/${customerId}/overview`),
-  // syncNaverData 제거됨 — 실시간 API 사용
-
   // 전체 종합
   getBizMoney: (storeId: number) =>
     request<BizMoneyBalance>(`/all-in-one/bizmoney?store_id=${storeId}`),
