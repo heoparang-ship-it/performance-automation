@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useStore } from "./StoreProvider";
-import { BarChart3, TrendingUp, Zap, Settings, Users } from "lucide-react";
+import { BarChart3, TrendingUp, Zap, Settings, Users, Upload } from "lucide-react";
 
 const NAV_ITEMS = [
   { href: "/", label: "대시보드", icon: BarChart3 },
   { href: "/ads", label: "광고 관리", icon: TrendingUp },
   { href: "/optimize", label: "자동 최적화", icon: Zap },
+  { href: "/upload", label: "데이터 업로드", icon: Upload },
   { href: "/settings", label: "설정", icon: Settings },
 ];
 

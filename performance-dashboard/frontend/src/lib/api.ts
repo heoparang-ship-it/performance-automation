@@ -226,6 +226,28 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ messages, context }),
     }),
+
+  // 파일 업로드
+  uploadFile: async (file: File, storeId: number, targetDate?: string): Promise<UploadResult> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const params = new URLSearchParams({ store_id: String(storeId) });
+    if (targetDate) params.set("target_date", targetDate);
+
+    const res = await fetch(`${BASE}/upload/csv?${params}`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: res.statusText }));
+      throw new Error(err.detail || "업로드 실패");
+    }
+    return res.json();
+  },
+
+  // 모든 스토어 조회 (linked 여부 무관)
+  getAllStores: () => request<Store[]>("/stores"),
 };
 
 // ── 타입 정의 ──
@@ -602,6 +624,22 @@ export interface UserUpdate {
   name?: string;
   role?: string;
   password?: string;
+}
+
+export interface UploadResult {
+  upload_id: number;
+  filename: string;
+  rows_processed: number;
+  rows_inserted: number;
+  rows_updated: number;
+  columns_detected: string[];
+  summary: {
+    total_cost: number;
+    total_revenue: number;
+    total_conversions: number;
+    roas: number;
+  };
+  actions_generated: number;
 }
 
 // ── SWR 훅 ──
