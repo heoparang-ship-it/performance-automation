@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useStore } from "./StoreProvider";
-import { useAuth } from "./AuthProvider";
 
 const NAV_ITEMS = [
   { href: "/", label: "대시보드", icon: "📊" },
@@ -16,18 +15,11 @@ const ADMIN_ITEMS = [
   { href: "/users", label: "담당자 관리", icon: "👥" },
 ];
 
-const ROLE_LABELS: Record<string, string> = {
-  master: "마스터",
-  admin: "관리자",
-  staff: "담당자",
-};
-
 export default function Sidebar() {
   const pathname = usePathname();
   const { stores, selectedStoreId, setSelectedStoreId } = useStore();
-  const { user, logout, isAdmin } = useAuth();
 
-  const allNavItems = isAdmin ? [...NAV_ITEMS, ...ADMIN_ITEMS] : NAV_ITEMS;
+  const allNavItems = [...NAV_ITEMS, ...ADMIN_ITEMS];
 
   return (
     <aside className="fixed left-0 top-0 w-60 h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex flex-col z-30">
@@ -93,28 +85,12 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* 사용자 정보 + 로그아웃 */}
-      <div className="p-4 border-t border-slate-700 space-y-3">
+      {/* 하단 상태 */}
+      <div className="p-4 border-t border-slate-700">
         <div className="flex items-center gap-2 text-[11px] text-slate-500">
           <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
           엑스컴AI 연동 중
         </div>
-        {user && (
-          <div className="flex items-center justify-between">
-            <div className="min-w-0">
-              <p className="text-xs text-white font-medium truncate">{user.name}</p>
-              <p className="text-[10px] text-slate-400">
-                {ROLE_LABELS[user.role] || user.role}
-              </p>
-            </div>
-            <button
-              onClick={logout}
-              className="flex-shrink-0 text-[10px] text-slate-500 hover:text-white transition-colors px-2 py-1 rounded hover:bg-slate-700/50"
-            >
-              로그아웃
-            </button>
-          </div>
-        )}
       </div>
     </aside>
   );

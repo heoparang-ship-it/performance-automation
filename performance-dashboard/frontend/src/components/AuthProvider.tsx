@@ -1,14 +1,7 @@
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import { api, AuthUser } from "@/lib/api";
+import { createContext, useContext, useMemo } from "react";
+import { AuthUser } from "@/lib/api";
 
 interface AuthCtx {
   user: AuthUser | null;
@@ -18,72 +11,32 @@ interface AuthCtx {
   isAdmin: boolean;
 }
 
+const DUMMY_USER: AuthUser = {
+  id: 1,
+  email: "",
+  name: "관리자",
+  role: "master",
+  created_at: "",
+};
+
 const Ctx = createContext<AuthCtx>({
-  user: null,
-  loading: true,
+  user: DUMMY_USER,
+  loading: false,
   login: async () => {},
   logout: () => {},
-  isAdmin: false,
+  isAdmin: true,
 });
 
 export const useAuth = () => useContext(Ctx);
 
-export default function AuthProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [loading, setLoading] = useState(true);
+export default function AuthProvider({ children }: { children: React.ReactNode }) {
+  const value = useMemo(() => ({
+    user: DUMMY_USER,
+    loading: false,
+    login: async () => {},
+    logout: () => {},
+    isAdmin: true,
+  }), []);
 
-  useEffect(() => {
-    const token = localStorage.getItem("auth_token");
-    const savedUser = localStorage.getItem("auth_user");
-
-    if (token && savedUser) {
-      api
-        .getMe()
-        .then((u) => {
-          setUser(u);
-          localStorage.setItem("auth_user", JSON.stringify(u));
-        })
-        .catch(() => {
-          localStorage.removeItem("auth_token");
-          localStorage.removeItem("auth_user");
-        })
-        .finally(() => setLoading(false));
-    } else {
-      setLoading(false);
-    }
-  }, []);
-
-  const login = useCallback(async (email: string, password: string) => {
-    const res = await api.login(email, password);
-    localStorage.setItem("auth_token", res.access_token);
-    localStorage.setItem("auth_user", JSON.stringify(res.user));
-    setUser(res.user);
-  }, []);
-
-  const logout = useCallback(() => {
-    localStorage.removeItem("auth_token");
-    localStorage.removeItem("auth_user");
-    setUser(null);
-    window.location.href = "/login";
-  }, []);
-
-  const isAdmin = useMemo(
-    () => user?.role === "master" || user?.role === "admin",
-    [user]
-  );
-
-  const value = useMemo(
-    () => ({ user, loading, login, logout, isAdmin }),
-    [user, loading, login, logout, isAdmin]
-  );
-
-  return (
-    <Ctx.Provider value={value}>
-      {children}
-    </Ctx.Provider>
-  );
+  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

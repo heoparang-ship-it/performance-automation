@@ -14,7 +14,7 @@ from ..config import JWT_SECRET_KEY, JWT_ALGORITHM, JWT_EXPIRE_MINUTES
 from ..database import get_db
 from ..models.user import User
 
-security_scheme = HTTPBearer(auto_error=True)
+security_scheme = HTTPBearer(auto_error=False)
 
 
 def hash_password(password: str) -> str:
@@ -53,17 +53,19 @@ def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security_scheme),
     db: Session = Depends(get_db),
 ) -> User:
-    """JWT Bearer 토큰으로 현재 사용자 조회. 모든 보호 엔드포인트에서 Depends()로 사용."""
-    payload = decode_token(credentials.credentials)
-    user_id = int(payload["sub"])
-    user = db.query(User).filter_by(id=user_id).first()
+    """인증 없이 첫 번째 사용자(master)를 반환. 로그인 기능 비활성화."""
+    user = db.query(User).first()
     if not user:
-        raise HTTPException(status_code=401, detail="사용자를 찾을 수 없습니다.")
+        # DB에 유저가 없으면 임시 유저 객체 반환
+        dummy = User()
+        dummy.id = 1
+        dummy.email = "admin@local"
+        dummy.name = "관리자"
+        dummy.role = "master"
+        return dummy
     return user
 
 
 def require_admin(current_user: User = Depends(get_current_user)) -> User:
-    """master 또는 admin 역할만 허용."""
-    if current_user.role not in ("master", "admin"):
-        raise HTTPException(status_code=403, detail="관리자 권한이 필요합니다.")
+    """로그인 비활성화 상태에서 항상 통과."""
     return current_user

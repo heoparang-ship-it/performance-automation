@@ -23,13 +23,8 @@ async function request<T>(url: string, options?: RequestInit): Promise<T> {
   });
 
   if (res.status === 401) {
-    if (typeof window !== "undefined" && !url.includes("/auth/login")) {
-      localStorage.removeItem("auth_token");
-      localStorage.removeItem("auth_user");
-      window.location.href = "/login";
-    }
-    const err = await res.json().catch(() => ({ detail: "인증이 필요합니다." }));
-    throw new Error(err.detail || "인증이 필요합니다.");
+    const err = await res.json().catch(() => ({ detail: "인증 오류" }));
+    throw new Error(err.detail || "인증 오류");
   }
 
   if (!res.ok) {
