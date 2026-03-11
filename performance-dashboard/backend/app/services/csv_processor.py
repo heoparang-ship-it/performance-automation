@@ -42,7 +42,16 @@ def process_csv(
 
     # CSV 파싱
     text = file_content.decode("utf-8-sig")
-    reader = csv.DictReader(io.StringIO(text))
+    lines = text.splitlines(keepends=True)
+
+    # 네이버 보고서 첫 줄 제목행 스킵 (예: "계정 보고서(...),kyh5655:naver")
+    if lines and ("보고서" in lines[0] or lines[0].strip().startswith('"')):
+        # 첫 줄이 보고서 제목인지 확인: 실제 데이터 컬럼이 아닌 경우 스킵
+        first_line_fields = next(csv.reader(io.StringIO(lines[0])))
+        if len(first_line_fields) <= 2:
+            lines = lines[1:]
+
+    reader = csv.DictReader(io.StringIO("".join(lines)))
 
     if not reader.fieldnames:
         raise ValueError("CSV 헤더를 찾을 수 없습니다.")
