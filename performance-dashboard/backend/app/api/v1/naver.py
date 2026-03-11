@@ -193,4 +193,42 @@ def get_account_overview(customer_id: str, db: Session = Depends(get_db), curren
     )
 
 
-    # sync 엔드포인트 제거됨 — 실시간 API 사용
+# ── 데이터 동기화 ──
+
+
+@router.post("/sync/{customer_id}")
+def sync_data(
+    customer_id: str,
+    period_days: int = 14,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """네이버 API에서 성과 데이터를 가져와 DB에 저장."""
+    import datetime as dt
+
+    from ...models.store import Store
+    from ...services.naver_sync import sync_naver_data
+
+    client = _get_client(db)
+
+    # 스토어 찾기
+    store = db.query(Store).filter_by(customer_id=customer_id).first()
+    if not store:
+        raise HTTPException(status_code=404, detail="해당 광고주의 스토어를 찾을 수 없습니다.")
+
+    end_date = dt.date.today()
+    start_date = end_date - dt.timedelta(days=period_days)
+
+    try:
+        result = sync_naver_data(
+            db=db,
+            client=client,
+            customer_id=customer_id,
+            store_id=store.id,
+            start_date=start_date.isoformat(),
+            end_date=end_date.isoformat(),
+        )
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"동기화 오류: {str(e)}")
+
+    return result

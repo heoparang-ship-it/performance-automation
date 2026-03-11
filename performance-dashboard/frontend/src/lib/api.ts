@@ -248,6 +248,13 @@ export const api = {
 
   // 모든 스토어 조회 (linked 여부 무관)
   getAllStores: () => request<Store[]>("/stores"),
+
+  // 네이버 API 데이터 동기화
+  syncNaverData: (customerId: string, periodDays = 14) =>
+    request<NaverSyncResult>(`/naver/sync/${customerId}`, {
+      method: "POST",
+      body: JSON.stringify({}),
+    }),
 };
 
 // ── 타입 정의 ──
@@ -640,6 +647,14 @@ export interface UploadResult {
     roas: number;
   };
   actions_generated: number;
+}
+
+export interface NaverSyncResult {
+  success: boolean;
+  campaigns_count: number;
+  adgroups_count: number;
+  keywords_count: number;
+  stats_rows_saved: number;
 }
 
 // ── SWR 훅 ──

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CheckCircle, Settings, Link, Unlink, RefreshCw, Trash2, Database, FlaskConical } from "lucide-react";
+import { CheckCircle, Settings, Link, Unlink, RefreshCw, Trash2, Database, FlaskConical, Download, Loader2 } from "lucide-react";
 import {
   api,
   ThresholdSettings,
@@ -9,6 +9,7 @@ import {
   NaverCredentialsOut,
   NaverCustomer,
   NaverAccountOverview,
+  NaverSyncResult,
 } from "@/lib/api";
 import { useStore } from "@/components/StoreProvider";
 import { formatKRW } from "@/lib/format";
@@ -206,6 +207,25 @@ export default function SettingsPage() {
     if (!confirm("이 광고주 연결을 해제하시겠습니까?")) return;
     await api.deleteStore(id);
     refreshStores();
+  };
+
+  // 데이터 동기화
+  const [syncing, setSyncing] = useState<string | null>(null);
+  const [syncResult, setSyncResult] = useState<NaverSyncResult | null>(null);
+  const [syncError, setSyncError] = useState("");
+
+  const handleSync = async (customerId: string) => {
+    setSyncing(customerId);
+    setSyncResult(null);
+    setSyncError("");
+    try {
+      const res = await api.syncNaverData(customerId);
+      setSyncResult(res);
+    } catch (e: any) {
+      setSyncError(e.message || "동기화 실패");
+    } finally {
+      setSyncing(null);
+    }
   };
 
   // 연결된 광고주 ID 목록
@@ -436,7 +456,7 @@ export default function SettingsPage() {
       {stores.length > 0 && (
         <section className="mb-8">
           <h3 className="text-sm font-bold text-gray-200 mb-3">연결된 광고주</h3>
-          <div className="bg-gray-900 rounded-lg border border-gray-700 p-4">
+          <div className="bg-gray-900 rounded-lg border border-gray-700 p-4 space-y-3">
             <ul className="space-y-1">
               {stores.map((s) => (
                 <li
@@ -449,15 +469,56 @@ export default function SettingsPage() {
                       <span className="text-xs text-gray-400 ml-2">ID: {s.customer_id}</span>
                     )}
                   </div>
-                  <button
-                    className="text-xs text-negative hover:underline"
-                    onClick={() => handleDeleteStore(s.id)}
-                  >
-                    연결 해제
-                  </button>
+                  <div className="flex items-center gap-2">
+                    {s.customer_id && (
+                      <button
+                        className="text-xs text-emerald-400 bg-emerald-950/40 hover:bg-emerald-950/60 px-3 py-1 rounded font-medium disabled:opacity-50 flex items-center gap-1"
+                        onClick={() => handleSync(s.customer_id!)}
+                        disabled={syncing === s.customer_id}
+                      >
+                        {syncing === s.customer_id ? (
+                          <>
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                            동기화 중...
+                          </>
+                        ) : (
+                          <>
+                            <Download className="w-3 h-3" />
+                            데이터 동기화
+                          </>
+                        )}
+                      </button>
+                    )}
+                    <button
+                      className="text-xs text-negative hover:underline"
+                      onClick={() => handleDeleteStore(s.id)}
+                    >
+                      연결 해제
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>
+
+            {/* 동기화 결과 */}
+            {syncResult && (
+              <div className="bg-emerald-950/30 border border-emerald-700 rounded p-3">
+                <p className="text-sm font-medium text-emerald-400 mb-1">
+                  <CheckCircle className="w-4 h-4 inline mr-1" />
+                  데이터 동기화 완료
+                </p>
+                <div className="grid grid-cols-2 gap-2 text-xs text-gray-300">
+                  <span>캠페인: {syncResult.campaigns_count}개</span>
+                  <span>광고그룹: {syncResult.adgroups_count}개</span>
+                  <span>저장된 통계: {syncResult.stats_rows_saved}행</span>
+                </div>
+              </div>
+            )}
+            {syncError && (
+              <div className="bg-red-950/30 border border-red-700 rounded p-3">
+                <p className="text-sm text-red-400">동기화 실패: {syncError}</p>
+              </div>
+            )}
           </div>
         </section>
       )}
